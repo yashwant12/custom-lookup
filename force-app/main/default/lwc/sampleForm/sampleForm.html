@@ -1,0 +1,22 @@
+<template>
+    <lightning-card title="Sample form">
+        <div class="slds-p-around_medium">
+    
+          <c-custom-lookup label="Search Account" object-name="Account" first-field="Phone" second-field="Rating"
+          placeholder="Search account here..." is-multi-entry={isMultiEntry} icon-name="standard:account"
+            onuserselected={lookupRecord} limit={limit}></c-custom-lookup>
+    
+          <lightning-input label="First Name" name="FirstName" class="slds-m-bottom_x-small"></lightning-input>
+    
+          <lightning-input label="Last Name" name="LastName" class="slds-m-bottom_x-small"></lightning-input>
+    
+          <lightning-input label="Title" name="Title" class="slds-m-bottom_x-small"></lightning-input>
+    
+          <lightning-input type="tel" label="Phone" name="Phone" class="slds-m-bottom_x-small"></lightning-input>
+    
+          <lightning-input type="email" label="Email" name="Email" class="slds-m-bottom_x-small"></lightning-input>
+    
+          <lightning-button label="Create Contact" variant="brand" onclick={createContact}></lightning-button>
+        </div>
+      </lightning-card>
+</template>

@@ -1,0 +1,18 @@
+.slds-dropdown_length-with-icon-7,
+.slds-dropdown--length-with-icon-7{
+    max-height: calc((1.5rem + 1rem) * 6);
+    overflow-y: auto;
+}
+
+.slds-dropdown_fluid, .slds-dropdown--fluid {
+    min-width: 100%;
+    max-width: 100%;
+    width: 100%;
+}
+
+.slds-pill__label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+}

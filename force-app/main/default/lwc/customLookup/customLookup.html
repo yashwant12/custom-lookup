@@ -1,0 +1,133 @@
+<template>
+   <div class="slds-form-element">
+      <label if:true={label} class="slds-form-element__label" for="combobox">{label}</label>
+      <div class="slds-form-element__control">
+         <div class={getContainerClass}>
+            <div class={getDropdownClass} aria-expanded={isExpanded} aria-haspopup="listbox" role="combobox">
+               <!-- Search input start -->
+               <div class={getComboboxClass} role="none">
+                  <template if:false={isMultiEntry}>
+                     <lightning-icon icon-name={getSelectIconName} size="small" alternative-text="Selected item icon"
+                        class={getSelectIconClass}>
+                     </lightning-icon>
+                  </template>
+                  <!-- Text input -->
+                  <input type="text" class={getInputClass} aria-autocomplete="list" aria-controls="listbox"
+                     autocomplete="off" role="textbox" id="combobox" placeholder={placeholder} value={getInputValue}
+                     readonly={isInputReadonly} onfocus={handleFocus} onblur={handleBlur} oninput={handleInput}></input>
+                  <!-- Search icon -->
+                  <lightning-icon icon-name="utility:search" size="x-small" alternative-text="Search icon"
+                     class={getSearchIconClass}></lightning-icon>
+                  <!-- Clear selection button icon for single entry lookups -->
+                  <template if:false={isMultiEntry}>
+                     <button title="Remove selected option" type="button" onclick={handleClearSelection}
+                        class={getClearSelectionButtonClass}>
+                        <lightning-icon icon-name="utility:close" size="x-small"
+                           alternative-text="Remove selected option" class="slds-button__icon"></lightning-icon>
+                     </button>
+                  </template>
+               </div>
+               <!-- Search input end -->
+               <!-- Result list box start -->
+               <div id="listbox" role="listbox"
+                  class="slds-dropdown slds-dropdown_fluid"
+                  onmousedown={handleMouseDown} onmouseup={handleMouseUp}>
+                  <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+
+                     <template if:true={isInputEmpty}>
+                        <li role="presentation" class="slds-listbox__item">
+                           <span class="slds-media slds-listbox__option_entity" role="option">
+                              <span class="slds-media__body">
+                                 Recent Records
+                              </span>
+                           </span>
+                        </li>
+                     </template>
+
+                     <div class="slds-dropdown_length-with-icon-7">
+                        <template for:each={searchResults} for:item="result" if:true={hasResults}>
+                           <li key={result.Id} role="presentation" class="slds-listbox__item">
+                              <span
+                                 class="slds-media slds-media_center slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta"
+                                 role="option" onclick={handleResultClick} data-recid={result.Id}>
+                                 <span style="pointer-events: none;" class="slds-media__figure slds-listbox__option-icon">
+                                    <span class="slds-icon_container">
+                                       <lightning-icon icon-name={iconName} size="small" alternative-text="icon">
+                                       </lightning-icon>
+                                    </span>
+                                 </span>
+                                 <span style="pointer-events: none;" class="slds-media__body">
+                                    <span
+                                       class="slds-listbox__option-text slds-listbox__option-text_entity">{result.Name}</span>
+                                    <span
+                                       class="slds-listbox__option-meta slds-listbox__option-meta_entity">{result.field}</span>
+                                 </span>
+                              </span>
+                           </li>
+                        </template>
+                     </div>
+                     
+                     <!-- Display that there are no results -->
+                     <template if:false={isExpanded}>
+                        <li role="presentation" class="slds-listbox__item">
+                           <span class="slds-media slds-listbox__option_entity" role="option">
+                              <span class="slds-media__body">
+                                 No results.
+                              </span>
+                           </span>
+                        </li>
+                     </template>
+                     <!-- Create new records -->
+                     <template if:true={createRecord}>
+                        <hr style="margin: 0px !important;">
+                        <li role="presentation" class="slds-listbox__item">
+                           <div class="slds-media slds-media_center slds-listbox__option slds-listbox__option_entity"
+                              onclick={handleNewRecordClick} role="option">
+                              <span class="slds-media__figure slds-listbox__option-icon">
+                                 <lightning-icon icon-name="utility:add" size="small"></lightning-icon>
+                              </span>
+                              <span class="slds-media__body">
+                                 <span class="slds-listbox__option-text">{createRecordLabel}</span>
+                              </span>
+                           </div>
+                        </li>
+                     </template>
+                     <!-- Create new records end -->
+                  </ul>
+               </div>
+               <!-- Result list box end -->
+            </div>
+         </div>
+         <!-- Multi-selection start -->
+         <template if:true={isMultiEntry}>
+            <div id="selection" role="listbox" aria-orientation="horizontal">
+               <ul class="slds-listbox slds-listbox_inline slds-var-p-top_xxx-small" role="group" aria-label="Selected Options:">
+                  <template for:each={selectedRecords} for:item="item">
+                     <li key={item.Id} role="presentation" class="slds-listbox__item">
+                        <lightning-pill label={item.Name} onremove={handleRemoveSelectedItem} name={item.Id}>
+                           <lightning-icon icon-name={iconName}></lightning-icon>
+                        </lightning-pill>
+                     </li>
+                  </template>
+               </ul>
+            </div>
+         </template>
+         <!-- Multi-selection end -->
+
+         <!-- create new record start -->
+         <template if:true={showModal}>
+            <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open slds-modal_large">
+               <div class="slds-modal__container">
+                  <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                     <lightning-card>
+                        <lightning-record-form  object-api-name="Opportunity" layout-type="Full" columns="2" mode="edit" onsuccess={successHandler} oncancel={cancelHandler}></lightning-record-form>
+                      </lightning-card>
+                  </div>
+               </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+         </template>
+         <!-- create new record end -->
+      </div>
+   </div>
+</template>
